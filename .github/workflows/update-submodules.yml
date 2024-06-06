@@ -9,7 +9,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4.1.4
+        uses: actions/checkout@v4.1.6
 
       - name: Set up Git
         run: |
@@ -47,6 +47,8 @@ jobs:
           git submodule update --init --recursive --remote Tweaks/YouPiP
           git add .
           git submodule update --init --recursive --remote Tweaks/YouQuality
+          git add .
+          git submodule update --init --recursive --remote Tweaks/YouTimeStamp
           git add .
           git submodule update --init --recursive --remote Tweaks/YouGroupSettings
           git add .

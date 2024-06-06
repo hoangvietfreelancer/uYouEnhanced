@@ -55,6 +55,9 @@
 #define LOWCONTRASTMODE_CUTOFF_VERSION @"17.38.10" // LowContrastMode (v17.33.2-17.38.10)
 
 // Always show remaining time in video player - @bhackel
+@interface YTPlayerBarController : NSObject
+@property(nonatomic, strong) YTInlinePlayerBarContainerView *playerBar;
+@end
 @interface YTInlinePlayerBarContainerView (uYouEnhanced)
 @property(nonatomic, assign) BOOL shouldDisplayTimeRemaining;
 @end
@@ -84,9 +87,7 @@
 @end
 
 // YTTapToSeek - https://github.com/bhackel/YTTapToSeek
-@interface YTMainAppVideoPlayerOverlayViewController : UIViewController
-- (CGFloat)totalTime;
-@end
+// Header has been moved to https://github.com/arichornlover/YouTubeHeader/blob/main/YTMainAppVideoPlayerOverlayViewController.h
 
 // Enable Premium logo - @bhackel
 @interface YTITopbarLogoRenderer : NSObject
@@ -156,10 +157,6 @@
 
 @interface YTPlayabilityResolutionUserActionUIController : NSObject // Skips content warning before playing *some videos - @PoomSmart
 - (void)confirmAlertDidPressConfirm;
-@end
-
-@interface YTMainAppControlsOverlayView : UIView
-@property(readonly, nonatomic) YTQTMButton *watchCollapseButton;
 @end
 
 @interface YTTransportControlsButtonView : UIView

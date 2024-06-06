@@ -117,6 +117,10 @@
 }
 
 - (void)saveIcon {
+    if (![UIApplication sharedApplication].supportsAlternateIcons) {
+        NSLog(@"Alternate icons are not supported on this device.");
+        return;
+    }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *selectedIcon = self.selectedIconIndex >= 0 ? self.appIcons[self.selectedIconIndex] : nil;
         if (selectedIcon) {

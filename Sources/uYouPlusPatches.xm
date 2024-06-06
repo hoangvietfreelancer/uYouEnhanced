@@ -91,6 +91,76 @@ static void repositionCreateTab(YTIGuideResponse *response) {
 }
 %end
 
+// YouTube Native Share - https://github.com/jkhsjdhjs/youtube-native-share - @jkhsjdhjs
+typedef NS_ENUM(NSInteger, ShareEntityType) {
+    ShareEntityFieldVideo = 1,
+    ShareEntityFieldPlaylist = 2,
+    ShareEntityFieldChannel = 3,
+    ShareEntityFieldClip = 8
+};
+
+static inline NSString* extractIdWithFormat(GPBUnknownFieldSet *fields, NSInteger fieldNumber, NSString *format) {
+    if (![fields hasField:fieldNumber])
+        return nil;
+    GPBUnknownField *idField = [fields getField:fieldNumber];
+    if ([idField.lengthDelimitedList count] != 1)
+        return nil;
+    NSString *id = [[NSString alloc] initWithData:[idField.lengthDelimitedList firstObject] encoding:NSUTF8StringEncoding];
+    return [NSString stringWithFormat:format, id];
+}
+
+%hook ELMPBShowActionSheetCommand
+- (void)executeWithCommandContext:(id)_context handler:(id)_handler {
+    if (!self.hasOnAppear)
+        return %orig;
+    GPBExtensionDescriptor *innertubeCommandDescriptor = [%c(YTIInnertubeCommandExtensionRoot) innertubeCommand];
+    if (![self.onAppear hasExtension:innertubeCommandDescriptor])
+        return %orig;
+    YTICommand *innertubeCommand = [self.onAppear getExtension:innertubeCommandDescriptor];
+    GPBExtensionDescriptor *updateShareSheetCommandDescriptor = [%c(YTIUpdateShareSheetCommand) updateShareSheetCommand];
+    if(![innertubeCommand hasExtension:updateShareSheetCommandDescriptor])
+        return %orig;
+    YTIUpdateShareSheetCommand *updateShareSheetCommand = [innertubeCommand getExtension:updateShareSheetCommandDescriptor];
+    if (!updateShareSheetCommand.hasSerializedShareEntity)
+        return %orig;
+
+    GPBMessage *shareEntity = [%c(GPBMessage) deserializeFromString:updateShareSheetCommand.serializedShareEntity];
+    GPBUnknownFieldSet *fields = shareEntity.unknownFields;
+    NSString *shareUrl;
+
+    if ([fields hasField:ShareEntityFieldClip]) {
+        GPBUnknownField *shareEntityClip = [fields getField:ShareEntityFieldClip];
+        if ([shareEntityClip.lengthDelimitedList count] != 1)
+            return %orig;
+        GPBMessage *clipMessage = [%c(GPBMessage) parseFromData:[shareEntityClip.lengthDelimitedList firstObject] error:nil];
+        shareUrl = extractIdWithFormat(clipMessage.unknownFields, 1, @"https://youtube.com/clip/%@");
+    }
+
+    if (!shareUrl)
+        shareUrl = extractIdWithFormat(fields, ShareEntityFieldChannel, @"https://youtube.com/channel/%@");
+
+    if (!shareUrl) {
+        shareUrl = extractIdWithFormat(fields, ShareEntityFieldPlaylist, @"%@");
+        if (shareUrl) {
+            if (![shareUrl hasPrefix:@"PL"] && ![shareUrl hasPrefix:@"FL"])
+                shareUrl = [shareUrl stringByAppendingString:@"&playnext=1"];
+            shareUrl = [@"https://youtube.com/playlist?list=" stringByAppendingString:shareUrl];
+        }
+    }
+
+    if (!shareUrl)
+        shareUrl = extractIdWithFormat(fields, ShareEntityFieldVideo, @"https://youtube.com/watch?v=%@");
+
+    if (!shareUrl)
+        return %orig;
+
+    if ([NSUserDefaults.standardUserDefaults boolForKey:@"enableSystemShareSheet"]) {
+        UIActivityViewController *activityViewController = [[UIActivityViewController alloc]initWithActivityItems:@[shareUrl] applicationActivities:nil];
+        [[%c(YTUIUtils) topViewControllerForPresenting] presentViewController:activityViewController animated:YES completion:^{}];
+    }
+}
+%end
+
 // iOS 16 uYou crash fix - @level3tjg: https://github.com/qnblackcat/uYouPlus/pull/224
 // %group iOS16
 // %hook OBPrivacyLinkButton

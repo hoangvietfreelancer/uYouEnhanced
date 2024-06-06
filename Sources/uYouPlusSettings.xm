@@ -71,7 +71,6 @@ SWITCH_ITEM3(
 );
 */
 
-
 static int contrastMode() {
     NSString *appVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
     NSComparisonResult result1 = [appVersion compare:@"17.33.2" options:NSNumericSearch];
@@ -168,7 +167,7 @@ extern NSBundle *uYouPlusBundle();
     [sectionItems addObject:bug];
 
     YTSettingsSectionItem *developers = [%c(YTSettingsSectionItem)
-        itemWithTitle:LOC(@"Support the Developers")
+        itemWithTitle:LOC(@"SUPPORT_THE_DEVELOPERS")
         titleDescription:LOC(@"MiRO92, PoomSmart, level3tjg, BandarHL, julioverne & Galactic-dev")
         accessibilityIdentifier:nil
         detailTextBlock:^NSString *() {
@@ -179,6 +178,106 @@ extern NSBundle *uYouPlusBundle();
         }
     ];
     [sectionItems addObject:developers];
+
+    YTSettingsSectionItem *copySettings = [%c(YTSettingsSectionItem)
+        itemWithTitle:IS_ENABLED(@"replaceCopyandPasteButtons_enabled") ? LOC(@"EXPORT_SETTINGS") : LOC(@"COPY_SETTINGS")
+        titleDescription:IS_ENABLED(@"replaceCopyandPasteButtons_enabled") ? LOC(@"EXPORT_SETTINGS_DESC") : LOC(@"COPY_SETTINGS_DESC") 
+        accessibilityIdentifier:nil
+        detailTextBlock:nil
+        selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+            if (IS_ENABLED(@"replaceCopyandPasteButtons_enabled")) {
+                // Export Settings functionality
+                NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+                NSMutableString *settingsString = [NSMutableString string];
+                NSArray *copyKeys = @[
+        /* MAIN    Player Keys */ @"portraitFullscreen_enabled", @"slideToSeek_enabled", @"YTTapToSeek_enabled", @"doubleTapToSeek_disabled", @"snapToChapter_enabled", @"pinchToZoom_enabled", @"ytMiniPlayer_enabled", @"stockVolumeHUD_enabled", @"disablePullToFull_enabled", @"disableChapterSkip_enabled", @"alwaysShowRemainingTime_enabled", @"disableRemainingTime_enabled",
+        /* MAIN    Button Keys */ @"enableShareButton_enabled", @"enableSaveToButton_enabled", @"hideYTMusicButton_enabled", @"hideAutoplaySwitch_enabled", @"hideCC_enabled", @"hideVideoTitle_enabled", @"disableCollapseButton_enabled", @"disableFullscreenButton_enabled", @"hideHUD_enabled", @"hidePaidPromotionCard_enabled", @"hideChannelWatermark_enabled", @"hideVideoPlayerShadowOverlayButtons_enabled", @"hidePreviousAndNextButton_enabled", @"redProgressBar_enabled", @"hideHoverCards_enabled", @"hideRightPanel_enabled", @"hideFullscreenActions_enabled", @"noSuggestedVideo_enabled", @"hideHeatwaves_enabled", @"hideDoubleTapToSeekOverlay_enabled", @"hideOverlayDarkBackground_enabled", @"disableAmbientMode_enabled", @"noVideosInFullscreen_enabled", @"noRelatedWatchNexts_enabled",
+        /* MAIN    Shorts Keys */ @"hideBuySuperThanks_enabled", @"hideSubcriptions_enabled", @"disableResumeToShorts_enabled", @"shortsQualityPicker_enabled",
+        /* MAIN Player UI Keys */ @"redSubscribeButton_enabled", @"hideButtonContainers_enabled", @"hideConnectButton_enabled", @"hideShareButton_enabled", @"hideRemixButton_enabled", @"hideThanksButton_enabled", @"hideDownloadButton_enabled", @"hideClipButton_enabled", @"hideSaveToPlaylistButton_enabled", @"hideReportButton_enabled", @"hidePreviewCommentSection_enabled", @"hideCommentSection_enabled",
+        /* MAIN   Overlay Keys */ @"disableAccountSection_enabled", @"disableAutoplaySection_enabled", @"disableTryNewFeaturesSection_enabled", @"disableVideoQualityPreferencesSection_enabled", @"disableNotificationsSection_enabled", @"disableManageAllHistorySection_enabled", @"disableYourDataInYouTubeSection_enabled", @"disablePrivacySection_enabled", @"disableLiveChatSection_enabled", @"hidePremiumPromos_enabled",
+        /* MAIN    App UI Keys */ @"hideHomeTab_enabled", @"lowContrastMode_enabled", @"fixLowContrastMode_enabled", @"disableModernButtons_enabled", @"disableRoundedHints_enabled", @"disableModernFlags_enabled", @"ytNoModernUI_enabled", @"enableVersionSpoofer_enabled",
+        /* MAIN      Misc Keys */ @"uYouAdBlockingWorkaroundLite_enabled", @"uYouAdBlockingWorkaround_enabled", @"disableAnimatedYouTubeLogo_enabled", @"centerYouTubeLogo_enabled", @"hideYouTubeLogo_enabled", @"ytStartupAnimation_enabled", @"disableHints_enabled", @"stickNavigationBar_enabled", @"hideSponsorBlockButton_enabled", @"hideChipBar_enabled", @"hidePlayNextInQueue_enabled", @"hideCommunityPosts_enabled", @"hideChannelHeaderLinks_enabled", @"iPhoneLayout_enabled", @"bigYTMiniPlayer_enabled", @"reExplore_enabled", @"autoHideHomeBar_enabled", @"hideSubscriptionsNotificationBadge_enabled", @"fixCasting_enabled", @"newSettingsUI_enabled", @"flex_enabled",
+        /* TWEAK     uYou Keys */ @"hideShortsTab", @"hideCreateTab", @"hideCastButton", @"relatedVideosAtTheEndOfYTVideos", @"disableAgeRestriction", @"removeYouTubeAds", @"noSuggestedVideoAtEnd", @"showedWelcomeVC", @"shortsProgressBar", @"hideShortsCells", @"removeShortsCell", @"startupPage", 
+        /* TWEAK    YTUHD Keys */ @"EnableVP9", @"AllVP9"];
+                for (NSString *key in copyKeys) {
+                    if ([userDefaults objectForKey:key]) {
+                        NSString *value = [userDefaults objectForKey:key];
+                        [settingsString appendFormat:@"%@: %@\n", key, value];
+                    }
+                }   
+                NSString *fileName = @"uyouenhanced_settings.txt";
+                NSString *filePath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:fileName];
+                if (![settingsString writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:nil]) {
+                    NSLog(@"Failed to export settings to file.");
+                }
+            } else {
+                // Copy Settings functionality (default behavior)
+                NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+                NSMutableString *settingsString = [NSMutableString string];
+                NSArray *copyKeys = @[
+        /* MAIN    Player Keys */ @"portraitFullscreen_enabled", @"slideToSeek_enabled", @"YTTapToSeek_enabled", @"doubleTapToSeek_disabled", @"snapToChapter_enabled", @"pinchToZoom_enabled", @"ytMiniPlayer_enabled", @"stockVolumeHUD_enabled", @"disablePullToFull_enabled", @"disableChapterSkip_enabled", @"alwaysShowRemainingTime_enabled", @"disableRemainingTime_enabled",
+        /* MAIN    Button Keys */ @"enableShareButton_enabled", @"enableSaveToButton_enabled", @"hideYTMusicButton_enabled", @"hideAutoplaySwitch_enabled", @"hideCC_enabled", @"hideVideoTitle_enabled", @"disableCollapseButton_enabled", @"disableFullscreenButton_enabled", @"hideHUD_enabled", @"hidePaidPromotionCard_enabled", @"hideChannelWatermark_enabled", @"hideVideoPlayerShadowOverlayButtons_enabled", @"hidePreviousAndNextButton_enabled", @"redProgressBar_enabled", @"hideHoverCards_enabled", @"hideRightPanel_enabled", @"hideFullscreenActions_enabled", @"noSuggestedVideo_enabled", @"hideHeatwaves_enabled", @"hideDoubleTapToSeekOverlay_enabled", @"hideOverlayDarkBackground_enabled", @"disableAmbientMode_enabled", @"noVideosInFullscreen_enabled", @"noRelatedWatchNexts_enabled",
+        /* MAIN    Shorts Keys */ @"hideBuySuperThanks_enabled", @"hideSubcriptions_enabled", @"disableResumeToShorts_enabled", @"shortsQualityPicker_enabled",
+        /* MAIN Player UI Keys */ @"redSubscribeButton_enabled", @"hideButtonContainers_enabled", @"hideConnectButton_enabled", @"hideShareButton_enabled", @"hideRemixButton_enabled", @"hideThanksButton_enabled", @"hideDownloadButton_enabled", @"hideClipButton_enabled", @"hideSaveToPlaylistButton_enabled", @"hideReportButton_enabled", @"hidePreviewCommentSection_enabled", @"hideCommentSection_enabled",
+        /* MAIN   Overlay Keys */ @"disableAccountSection_enabled", @"disableAutoplaySection_enabled", @"disableTryNewFeaturesSection_enabled", @"disableVideoQualityPreferencesSection_enabled", @"disableNotificationsSection_enabled", @"disableManageAllHistorySection_enabled", @"disableYourDataInYouTubeSection_enabled", @"disablePrivacySection_enabled", @"disableLiveChatSection_enabled", @"hidePremiumPromos_enabled",
+        /* MAIN    App UI Keys */ @"hideHomeTab_enabled", @"lowContrastMode_enabled", @"fixLowContrastMode_enabled", @"disableModernButtons_enabled", @"disableRoundedHints_enabled", @"disableModernFlags_enabled", @"ytNoModernUI_enabled", @"enableVersionSpoofer_enabled",
+        /* MAIN      Misc Keys */ @"uYouAdBlockingWorkaroundLite_enabled", @"uYouAdBlockingWorkaround_enabled", @"disableAnimatedYouTubeLogo_enabled", @"centerYouTubeLogo_enabled", @"hideYouTubeLogo_enabled", @"ytStartupAnimation_enabled", @"disableHints_enabled", @"stickNavigationBar_enabled", @"hideSponsorBlockButton_enabled", @"hideChipBar_enabled", @"hidePlayNextInQueue_enabled", @"hideCommunityPosts_enabled", @"hideChannelHeaderLinks_enabled", @"iPhoneLayout_enabled", @"bigYTMiniPlayer_enabled", @"reExplore_enabled", @"autoHideHomeBar_enabled", @"hideSubscriptionsNotificationBadge_enabled", @"fixCasting_enabled", @"newSettingsUI_enabled", @"flex_enabled",
+        /* TWEAK     uYou Keys */ @"hideShortsTab", @"hideCreateTab", @"hideCastButton", @"relatedVideosAtTheEndOfYTVideos", @"disableAgeRestriction", @"removeYouTubeAds", @"noSuggestedVideoAtEnd", @"showedWelcomeVC", @"shortsProgressBar", @"hideShortsCells", @"removeShortsCell", @"startupPage", 
+        /* TWEAK    YTUHD Keys */ @"EnableVP9", @"AllVP9"];        
+                for (NSString *key in copyKeys) {
+                    if ([userDefaults objectForKey:key]) {
+                        NSString *value = [userDefaults objectForKey:key];
+                        [settingsString appendFormat:@"%@: %@\n", key, value];
+                    }
+                }       
+                [[UIPasteboard generalPasteboard] setString:settingsString];
+                // Show a confirmation message or perform some other action here
+            }
+            return YES;
+        }
+    ];
+    [sectionItems addObject:copySettings];
+
+    YTSettingsSectionItem *pasteSettings = [%c(YTSettingsSectionItem)
+        itemWithTitle:IS_ENABLED(@"replaceCopyandPasteButtons_enabled") ? LOC(@"IMPORT_SETTINGS") : LOC(@"PASTE_SETTINGS")
+        titleDescription:IS_ENABLED(@"replaceCopyandPasteButtons_enabled") ? LOC(@"IMPORT_SETTINGS_DESC") : LOC(@"PASTE_SETTINGS_DESC")
+        accessibilityIdentifier:nil
+        detailTextBlock:nil
+        selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+            if (IS_ENABLED(@"replaceCopyandPasteButtons_enabled")) {
+                // Import Settings functionality
+                UIDocumentPickerViewController *documentPicker = [[UIDocumentPickerViewController alloc] initWithDocumentTypes:@[@"public.text"] inMode:UIDocumentPickerModeImport];
+                documentPicker.delegate = (id<UIDocumentPickerDelegate>)self;
+                documentPicker.allowsMultipleSelection = NO;
+                [settingsViewController presentViewController:documentPicker animated:YES completion:nil];
+            } else {
+                // Paste Settings functionality (default behavior)
+                UIAlertController *confirmPasteAlert = [UIAlertController alertControllerWithTitle:LOC(@"Are you sure you want to paste the settings?") message:nil preferredStyle:UIAlertControllerStyleAlert];
+                [confirmPasteAlert addAction:[UIAlertAction actionWithTitle:LOC(@"Cancel") style:UIAlertActionStyleCancel handler:nil]];
+                [confirmPasteAlert addAction:[UIAlertAction actionWithTitle:LOC(@"Confirm") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    NSString *settingsString = [[UIPasteboard generalPasteboard] string];
+                    if (settingsString.length > 0) {
+                        NSArray *lines = [settingsString componentsSeparatedByString:@"\n"];
+                        for (NSString *line in lines) {
+                            NSArray *components = [line componentsSeparatedByString:@": "];
+                            if (components.count == 2) {
+                                NSString *key = components[0];
+                                NSString *value = components[1];
+                                [[NSUserDefaults standardUserDefaults] setObject:value forKey:key];
+                            }
+                        }
+                        [settingsViewController reloadData];
+                        SHOW_RELAUNCH_YT_SNACKBAR;
+                    }
+                }]];
+                [settingsViewController presentViewController:confirmPasteAlert animated:YES completion:nil];
+            }
+            return YES;
+        }
+    ];
+    [sectionItems addObject:pasteSettings];
+
+//  SWITCH_ITEM(LOC(@"REPLACE_COPY_AND_PASTE_BUTTONS"), LOC(@"REPLACE_COPY_AND_PASTE_BUTTONS"), @"replaceCopyandPasteButtons_enabled");
 
     YTSettingsSectionItem *exitYT = [%c(YTSettingsSectionItem)
         itemWithTitle:LOC(@"QUIT_YOUTUBE")
@@ -195,10 +294,10 @@ extern NSBundle *uYouPlusBundle();
     [sectionItems addObject:exitYT];
 
     SECTION_HEADER(LOC(@"📺 App Personalization"));
-    # pragma mark - uYouEnhanced Extras Menu
+    # pragma mark - uYouEnhanced Essential Menu
     YTSettingsSectionItem *customAppMenu = [%c(YTSettingsSectionItem)
-        itemWithTitle:LOC(@"uYouEnhanced Extras Menu")
-        titleDescription:LOC(@"This menu includes App Color Customization & Clearing the Cache 🗑️")
+        itemWithTitle:LOC(@"UYOUENHANCED_ESSENTIAL_MENU")
+        titleDescription:LOC(@"This menu includes App Color Customization & Ability to Clear the Cache 🗑️")
         accessibilityIdentifier:nil
         detailTextBlock:nil
         selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
@@ -210,7 +309,7 @@ extern NSBundle *uYouPlusBundle();
     [sectionItems addObject:customAppMenu];
 
     YTSettingsSectionItem *appIcon = [%c(YTSettingsSectionItem)
-        itemWithTitle:LOC(@"Change App Icon")
+        itemWithTitle:LOC(@"CHANGE_APP_ICON")
         titleDescription:nil
         accessibilityIdentifier:nil
         detailTextBlock:nil
@@ -221,6 +320,19 @@ extern NSBundle *uYouPlusBundle();
         }
     ];
     [sectionItems addObject:appIcon];
+
+    YTSettingsSectionItem *clearNotifications = [%c(YTSettingsSectionItem)
+        itemWithTitle:LOC(@"CLEAR_NOTIFICATIONS")
+        titleDescription:LOC(@"CLEAR_NOTIFICATIONS_DESC")
+        accessibilityIdentifier:nil
+        detailTextBlock:nil
+        selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+            [[UIApplication sharedApplication] cancelAllLocalNotifications];
+            [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+            return YES;
+        }
+    ];
+    [sectionItems addObject:clearNotifications];
 
     # pragma mark - App theme
     SECTION_HEADER(LOC(@"THEME_OPTIONS"));
@@ -272,8 +384,8 @@ extern NSBundle *uYouPlusBundle();
                     }
                 ],
                 [YTSettingsSectionItemClass
-                    checkmarkItemWithTitle:LOC(@"Custom Dark Theme")
-                    titleDescription:LOC(@"In order to use Custom Themes that is in the uYouPlus Button, you will need to select this to be able to use custom colors.")
+                    checkmarkItemWithTitle:LOC(@"CUSTOM_DARK_THEME")
+                    titleDescription:LOC(@"In order to use Custom Themes, go to uYouEnhanced Essential Menu, you will need to press Custom Theme Color and than change the colors.")
                     selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                         [[NSUserDefaults standardUserDefaults] setInteger:3 forKey:@"appTheme"];
                         [settingsViewController reloadData];
@@ -309,44 +421,102 @@ extern NSBundle *uYouPlusBundle();
     # pragma mark - Video player options
     SECTION_HEADER(LOC(@"VIDEO_PLAYER_OPTIONS"));
 
-    SWITCH_ITEM2(LOC(@"Enable Portrait Fullscreen"), LOC(@"Enables Portrait Fullscreen on the YouTube App. App restart is required. (only for iPhone)"), @"portraitFullscreen_enabled");
+    SWITCH_ITEM3(
+        LOC(@"ENABLE_PORTRAIT_FULLSCREEN"), 
+        LOC(@"ENABLE_PORTRAIT_FULLSCREEN_DESC"), 
+        @"portraitFullscreen_enabled",
+        ({
+            if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+                [[NSUserDefaults standardUserDefaults] setBool:enable forKey:@"portraitFullscreen_enabled"];
+                SHOW_RELAUNCH_YT_SNACKBAR;
+                return YES;
+            } else {
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Incompatibile" message:@"This Option is Incompatible on an iPad Device." preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+                [alert addAction:okAction];
+                [settingsViewController presentViewController:alert animated:YES completion:nil];
+                return NO;
+            }
+        });
+    );
     SWITCH_ITEM2(LOC(@"SLIDE_TO_SEEK"), LOC(@"SLIDE_TO_SEEK_DESC"), @"slideToSeek_enabled");
-    SWITCH_ITEM2(LOC(@"Enable Tap To Seek"), LOC(@"Jump to anywhere in a video by single-tapping the seek bar"), @"YTTapToSeek_enabled");
+    SWITCH_ITEM2(LOC(@"ENABLE_TAP_TO_SEEK"), LOC(@"ENABLE_TAP_TO_SEEK_DESC"), @"YTTapToSeek_enabled");
     SWITCH_ITEM(LOC(@"DISABLE_DOUBLE_TAP_TO_SEEK"), LOC(@"DISABLE_DOUBLE_TAP_TO_SEEK_DESC"), @"doubleTapToSeek_disabled");
     SWITCH_ITEM(LOC(@"SNAP_TO_CHAPTER"), LOC(@"SNAP_TO_CHAPTER_DESC"), @"snapToChapter_enabled");
     SWITCH_ITEM2(LOC(@"PINCH_TO_ZOOM"), LOC(@"PINCH_TO_ZOOM_DESC"), @"pinchToZoom_enabled");
     SWITCH_ITEM(LOC(@"YT_MINIPLAYER"), LOC(@"YT_MINIPLAYER_DESC"), @"ytMiniPlayer_enabled");
     SWITCH_ITEM2(LOC(@"STOCK_VOLUME_HUD"), LOC(@"STOCK_VOLUME_HUD_DESC"), @"stockVolumeHUD_enabled");
-    SWITCH_ITEM2(LOC(@"Disable pull-to-fullscreen gesture"), LOC(@"Disable the drag gesture to enter vertical fullscreen. Only applies to landscape videos."), @"disablePullToFull_enabled");
-    SWITCH_ITEM(LOC(@"Disable Double tap to skip chapter"), LOC(@"Disable the 2-finger double tap gesture that skips forward/backward by a chapter"), @"disableChapterSkip_enabled");
-    SWITCH_ITEM2(LOC(@"Always use remaining time"), LOC(@"Change the default to show time remaining in the player bar"), @"alwaysShowRemainingTime_enabled");
+    SWITCH_ITEM2(LOC(@"DISABLE_PULL_TO_FULLSCREEN_GESTURE"), LOC(@"ENABLE_PORTRAIT_FULLSCREEN_DESC"), @"disablePullToFull_enabled");
+    SWITCH_ITEM(LOC(@"DISABLE_DOUBLE_TAP_TO_SKIP_CHAPTER"), LOC(@"DISABLE_DOUBLE_TAP_TO_SKIP_CHAPTER_DESC"), @"disableChapterSkip_enabled");
+    SWITCH_ITEM(LOC(@"ALWAYS_USE_REMAINING_TIME"), LOC(@"ALWAYS_USE_REMAINING_TIME_DESC"), @"alwaysShowRemainingTime_enabled");
+    SWITCH_ITEM(LOC(@"DISABLE_TOGGLE_TIME_REMAINING"), LOC(@"DISABLE_TOGGLE_TIME_REMAINING_DESC"), @"disableRemainingTime_enabled");
 
     # pragma mark - Video controls overlay options
-    SECTION_HEADER(LOC(@"VIDEO_PLAYER_OPTIONS"));
+    SECTION_HEADER(LOC(@"VIDEO_CONTROLS_OVERLAY_OPTIONS"));
 
-    SWITCH_ITEM(LOC(@"Enable Share Button"), LOC(@"Enable the Share Button in video controls overlay."), @"enableShareButton_enabled");
-    SWITCH_ITEM(LOC(@"Enable 'Save To Playlist' Button"), LOC(@"Enable the 'Save To Playlist' Button in video controls overlay."), @"enableSaveToButton_enabled");
+    SWITCH_ITEM(LOC(@"ENABLE_SHARE_BUTTON"), LOC(@"ENABLE_SHARE_BUTTON_DESC"), @"enableShareButton_enabled");
+    SWITCH_ITEM(LOC(@"ENABLE_SAVE_TO_PLAYLIST_BUTTON"), LOC(@"ENABLE_SAVE_TO_PLAYLIST_BUTTON_DESC"), @"enableSaveToButton_enabled");
     SWITCH_ITEM(LOC(@"HIDE_YTMUSIC_BUTTON"), LOC(@"HIDE_YTMUSIC_BUTTON_DESC"), @"hideYTMusicButton_enabled");
     SWITCH_ITEM(LOC(@"HIDE_AUTOPLAY_SWITCH"), LOC(@"HIDE_AUTOPLAY_SWITCH_DESC"), @"hideAutoplaySwitch_enabled");
     SWITCH_ITEM(LOC(@"HIDE_SUBTITLES_BUTTON"), LOC(@"HIDE_SUBTITLES_BUTTON_DESC"), @"hideCC_enabled");
-    SWITCH_ITEM(LOC(@"Hide Video Title (in Fullscreen)"), LOC(@"Hides and Disables the Video Title and including the functionality that was shown on the Top Left of the Video Player."), @"hideVideoTitle_enabled");
-    SWITCH_ITEM(LOC(@"Hide Collapse (Arrow) Button"), LOC(@"Hides and Disables the Arrow Button in the Top Left of the Video Player."), @"disableCollapseButton_enabled");
-    SWITCH_ITEM(LOC(@"Hide Fullscreen Button"), LOC(@"Hides and Disables the Fullscreen Button in the Video Player."), @"disableFullscreenButton_enabled");
+    SWITCH_ITEM(LOC(@"HIDE_VIDEO_TITLE_IN_FULLSCREEN"), LOC(@"HIDE_VIDEO_TITLE_IN_FULLSCREEN_DESC"), @"hideVideoTitle_enabled");
+    SWITCH_ITEM(LOC(@"HIDE_COLLAPSE_BUTTON"), LOC(@"HIDE_COLLAPSE_BUTTON_DESC"), @"disableCollapseButton_enabled");
+    SWITCH_ITEM(LOC(@"HIDE_FULLSCREEN_BUTTON"), LOC(@"HIDE_FULLSCREEN_BUTTON_DESC"), @"disableFullscreenButton_enabled");
     SWITCH_ITEM(LOC(@"HIDE_HUD_MESSAGES"), LOC(@"HIDE_HUD_MESSAGES_DESC"), @"hideHUD_enabled");
     SWITCH_ITEM(LOC(@"HIDE_PAID_PROMOTION_CARDS"), LOC(@"HIDE_PAID_PROMOTION_CARDS_DESC"), @"hidePaidPromotionCard_enabled");
     SWITCH_ITEM2(LOC(@"HIDE_CHANNEL_WATERMARK"), LOC(@"HIDE_CHANNEL_WATERMARK_DESC"), @"hideChannelWatermark_enabled");
-    SWITCH_ITEM2(LOC(@"Hide Shadow Overlay Buttons"), LOC(@"Hide the Shadow Overlay on the Play/Pause, Previous, Next, Forward & Rewind Buttons."), @"hideVideoPlayerShadowOverlayButtons_enabled");
+    SWITCH_ITEM2(LOC(@"HIDE_SHADOW_OVERLAY_BUTTONS"), LOC(@"HIDE_SHADOW_OVERLAY_BUTTONS_DESC"), @"hideVideoPlayerShadowOverlayButtons_enabled");
     SWITCH_ITEM2(LOC(@"HIDE_PREVIOUS_AND_NEXT_BUTTON"), LOC(@"HIDE_PREVIOUS_AND_NEXT_BUTTON_DESC"), @"hidePreviousAndNextButton_enabled");
     SWITCH_ITEM2(LOC(@"RED_PROGRESS_BAR"), LOC(@"RED_PROGRESS_BAR_DESC"), @"redProgressBar_enabled");
     SWITCH_ITEM(LOC(@"HIDE_HOVER_CARD"), LOC(@"HIDE_HOVER_CARD_DESC"), @"hideHoverCards_enabled");
     SWITCH_ITEM2(LOC(@"HIDE_RIGHT_PANEL"), LOC(@"HIDE_RIGHT_PANEL_DESC"), @"hideRightPanel_enabled");
-    SWITCH_ITEM2(LOC(@"Hide Fullscreen Action Buttons"), LOC(@"Hides the buttons at the bottom of the screen when in landscape (only for iPhone)"), @"hideFullscreenActions_enabled");
-    SWITCH_ITEM2(LOC(@"Hide Suggested Video"), LOC(@"Remove the suggested video popup when finishing a video. Note that this will prevent autoplay from working."), @"noSuggestedVideo_enabled");
-    SWITCH_ITEM2(LOC(@"Hide Heatwaves"), LOC(@"Should hide the Heatwaves in the video player. App restart is required."), @"hideHeatwaves_enabled");
-    SWITCH_ITEM2(LOC(@"Hide Double Tap to Seek Overlay"), LOC(@"This hides the animated double tap to seek overlay in the video player. App restart is required."), @"hideDoubleTapToSeekOverlay_enabled");
-    SWITCH_ITEM2(LOC(@"Hide Dark Overlay Background"), LOC(@"Hide video player's dark overlay background. App restart is required."), @"hideOverlayDarkBackground_enabled");
-    SWITCH_ITEM2(LOC(@"Disable Ambient Mode in Fullscreen"), LOC(@"When Enabled, this will Disable the functionality of Ambient Mode from being used in the Video Player when in Fullscreen. App restart is required."), @"disableAmbientMode_enabled");
-    SWITCH_ITEM2(LOC(@"Hide Suggested Videos in Fullscreen"), LOC(@"Hide video player's suggested videos whenever in fullscreen. App restart is required."), @"noVideosInFullscreen_enabled");
+    SWITCH_ITEM3(
+        LOC(@"HIDE_FULLSCREEN_ACTION_BUTTONS"), 
+        LOC(@"HIDE_FULLSCREEN_ACTION_BUTTONS_DESC"), 
+        @"hideFullscreenActions_enabled",
+        ({
+            if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+                [[NSUserDefaults standardUserDefaults] setBool:enable forKey:@"hideFullscreenActions_enabled"];
+                SHOW_RELAUNCH_YT_SNACKBAR;
+                return YES;
+            } else {
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Incompatibile" message:@"This Option is Incompatible on an iPad Device." preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+                [alert addAction:okAction];
+                [settingsViewController presentViewController:alert animated:YES completion:nil];
+                return NO;
+            }
+        });
+    );
+    SWITCH_ITEM2(LOC(@"HIDE_SUGGESTED_VIDEO"), LOC(@"HIDE_SUGGESTED_VIDEO_DESC"), @"noSuggestedVideo_enabled");
+    SWITCH_ITEM2(LOC(@"HIDE_HEATWAVES_BAR"), LOC(@"HIDE_HEATWAVES_BAR_DESC"), @"hideHeatwaves_enabled");
+    SWITCH_ITEM2(LOC(@"HIDE_DOUBLE_TAP_TO_SEEK_OVERLAY"), LOC(@"HIDE_DOUBLE_TAP_TO_SEEK_OVERLAY_DESC"), @"hideDoubleTapToSeekOverlay_enabled");
+    SWITCH_ITEM2(LOC(@"HIDE_DARK_OVERLAY_BACKGROUND"), LOC(@"HIDE_DARK_OVERLAY_BACKGROUND_DESC"), @"hideOverlayDarkBackground_enabled");
+    SWITCH_ITEM2(LOC(@"HIDE_AMBIENT_MODE_IN_FULLSCREEN"), LOC(@"HIDE_AMBIENT_MODE_IN_FULLSCREEN_DESC"), @"disableAmbientMode_enabled");
+    SWITCH_ITEM2(LOC(@"HIDE_SUGGESTED_VIDEOS_IN_FULLSCREEN"), LOC(@"HIDE_SUGGESTED_VIDEOS_IN_FULLSCREEN_DESC"), @"noVideosInFullscreen_enabled");
+    SWITCH_ITEM3(
+        LOC(@"HIDE_ALL_VIDEOS_UNDER_PLAYER"), 
+        LOC(@"HIDE_ALL_VIDEOS_UNDER_PLAYER_DESC"), 
+        @"noRelatedWatchNexts_enabled",
+        ({
+            if (enable) {
+                if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)) {
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:@"Enabling this option will not hide the videos under the player on an iPad while being in Landscape Mode." preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+                    [alert addAction:okAction];
+                    [settingsViewController presentViewController:alert animated:YES completion:nil];
+                }
+                [[NSUserDefaults standardUserDefaults] setBool:enable forKey:@"noRelatedWatchNexts_enabled"];
+                [settingsViewController reloadData];
+                SHOW_RELAUNCH_YT_SNACKBAR;
+                return YES;
+            }
+            [[NSUserDefaults standardUserDefaults] setBool:enable forKey:@"noRelatedWatchNexts_enabled"];
+            [settingsViewController reloadData];
+            SHOW_RELAUNCH_YT_SNACKBAR;
+            return YES;
+        });
+    );
 
    # pragma mark - Shorts controls overlay options
     SECTION_HEADER(LOC(@"SHORTS_CONTROLS_OVERLAY_OPTIONS"));
@@ -354,49 +524,50 @@ extern NSBundle *uYouPlusBundle();
     SWITCH_ITEM(LOC(@"HIDE_SUPER_THANKS"), LOC(@"HIDE_SUPER_THANKS_DESC"), @"hideBuySuperThanks_enabled");
     SWITCH_ITEM(LOC(@"HIDE_SUBCRIPTIONS"), LOC(@"HIDE_SUBCRIPTIONS_DESC"), @"hideSubcriptions_enabled");
     // SWITCH_ITEM(LOC(@"DISABLE_RESUME_TO_SHORTS"), LOC(@"DISABLE_RESUME_TO_SHORTS_DESC"), @"disableResumeToShorts_enabled");
+    SWITCH_ITEM2(LOC(@"SHORTS_QUALITY_PICKER"), LOC(@"SHORTS_QUALITY_PICKER_DESC"), @"shortsQualityPicker_enabled");
 
     # pragma mark - Video player button options
-    SECTION_HEADER(LOC(@"Video Player Button Options"));
+    SECTION_HEADER(LOC(@"VIDEO_PLAYER_BUTTON_OPTIONS"));
 
 // (the options "Red Subscribe Button" and "Hide Button Containers under player" are currently not working)
 //
-//  SWITCH_ITEM(LOC(@"Red Subscribe Button"), LOC(@"Replaces the Subscribe Button color from being White to the color Red."), @"redSubscribeButton_enabled");
-//  SWITCH_ITEM2(LOC(@"Hide Button Containers under player"), LOC(@"Hides Button Containers under the video player."), @"hideButtonContainers_enabled");
-    SWITCH_ITEM(LOC(@"Hide the Connect Button under player"), LOC(@"Hides the Connect Button under the video player."), @"hideConnectButton_enabled");
-    SWITCH_ITEM(LOC(@"Hide the Share Button under player"), LOC(@"Hides the Share Button under the video player."), @"hideShareButton_enabled");
+//  SWITCH_ITEM(LOC(@"RED_SUBSCRIBE_BUTTON"), LOC(@"RED_SUBSCRIBE_BUTTON_DESC"), @"redSubscribeButton_enabled");
+//  SWITCH_ITEM2(LOC(@"HIDE_BUTTON_CONTAINERS_UNDER_PLAYER"), LOC(@"HIDE_BUTTON_CONTAINERS_UNDER_PLAYER_DESC"), @"hideButtonContainers_enabled");
+    SWITCH_ITEM(LOC(@"HIDE_CONNECT_BUTTON"), LOC(@"HIDE_CONNECT_BUTTON_DESC"), @"hideConnectButton_enabled");
+    SWITCH_ITEM(LOC(@"HIDE_SHARE_BUTTON"), LOC(@"HIDE_SHARE_BUTTON_DESC"), @"hideShareButton_enabled");
     SWITCH_ITEM(LOC(@"HIDE_REMIX_BUTTON"), LOC(@"HIDE_REMIX_BUTTON_DESC"), @"hideRemixButton_enabled");
-    SWITCH_ITEM(LOC(@"Hide the Thanks Button under player"), LOC(@"Hides the Thanks Button under the video player."), @"hideThanksButton_enabled");
+    SWITCH_ITEM(LOC(@"HIDE_THANKS_BUTTON"), LOC(@"HIDE_THANKS_BUTTON_DESC"), @"hideThanksButton_enabled");
     SWITCH_ITEM(LOC(@"HIDE_DOWNLOAD_BUTTON"), LOC(@"HIDE_DOWNLOAD_BUTTON_DESC"), @"hideDownloadButton_enabled");
     SWITCH_ITEM(LOC(@"HIDE_CLIP_BUTTON"), LOC(@"HIDE_CLIP_BUTTON_DESC"), @"hideClipButton_enabled");
-    SWITCH_ITEM(LOC(@"Hide the Save to playlist Button under player"), LOC(@"Hides the Save to playlist Button under the video player."), @"hideSaveToPlaylistButton_enabled");
-    SWITCH_ITEM(LOC(@"Hide the Report Button under player"), LOC(@"Hides the Report Button under the video player."), @"hideReportButton_enabled");
-    SWITCH_ITEM(LOC(@"Hide Comment Section previews"), LOC(@"Makes the comment section blank with no previews under the player."), @"hidePreviewCommentSection_enabled");
-    SWITCH_ITEM(LOC(@"Hide the comment section under player"), LOC(@"Hides the Comment Section below the player."), @"hideCommentSection_enabled");
+    SWITCH_ITEM(LOC(@"HIDE_SAVE_BUTTON"), LOC(@"HIDE_SAVE_BUTTON_DESC"), @"hideSaveToPlaylistButton_enabled");
+    SWITCH_ITEM(LOC(@"HIDE_REPORT_BUTTON"), LOC(@"HIDE_REPORT_BUTTON_DESC"), @"hideReportButton_enabled");
+    SWITCH_ITEM(LOC(@"HIDE_COMMENT_PREVIEWS_UNDER_PLAYER"), LOC(@"HIDE_COMMENT_PREVIEWS_UNDER_PLAYER_DESC"), @"hidePreviewCommentSection_enabled");
+    SWITCH_ITEM(LOC(@"HIDE_COMMENT_SECTION_BUTTON"), LOC(@"HIDE_COMMENT_SECTION_BUTTON_DESC"), @"hideCommentSection_enabled");
 
 # pragma mark - App settings overlay options
     SECTION_HEADER(LOC(@"App Settings Overlay Options"));
 
-    SWITCH_ITEM2(LOC(@"Hide `Account` Section"), LOC(@"App restart is required."), @"disableAccountSection_enabled");
-//  SWITCH_ITEM2(LOC(@"Hide `DontEatMyContent` Section"), LOC(@"App restart is required."), @"disableDontEatMyContentSection_enabled");
-//  SWITCH_ITEM2(LOC(@"Hide `YouTube Return Dislike` Section"), LOC(@"App restart is required."), @"disableReturnYouTubeDislikeSection_enabled");
-//  SWITCH_ITEM2(LOC(@"Hide `YouPiP` Section"), LOC(@"App restart is required."), @"disableYouPiPSection_enabled");
-    SWITCH_ITEM2(LOC(@"Hide `Autoplay` Section"), LOC(@"App restart is required."), @"disableAutoplaySection_enabled");
-    SWITCH_ITEM2(LOC(@"Hide `Try New Features` Section"), LOC(@"App restart is required."), @"disableTryNewFeaturesSection_enabled");
-    SWITCH_ITEM2(LOC(@"Hide `Video quality preferences` Section"), LOC(@"App restart is required."), @"disableVideoQualityPreferencesSection_enabled");
-    SWITCH_ITEM2(LOC(@"Hide `Notifications` Section"), LOC(@"App restart is required."), @"disableNotificationsSection_enabled");
-    SWITCH_ITEM2(LOC(@"Hide `Manage all history` Section"), LOC(@"App restart is required."), @"disableManageAllHistorySection_enabled");
-    SWITCH_ITEM2(LOC(@"Hide `Your data in YouTube` Section"), LOC(@"App restart is required."), @"disableYourDataInYouTubeSection_enabled");
-    SWITCH_ITEM2(LOC(@"Hide `Privacy` Section"), LOC(@"App restart is required."), @"disablePrivacySection_enabled");
-    SWITCH_ITEM2(LOC(@"Hide `Live Chat` Section"), LOC(@"App restart is required."), @"disableLiveChatSection_enabled");
-    SWITCH_ITEM2(LOC(@"Hide `Get Youtube Premium` Section"), LOC(@"App restart is required."), @"hidePremiumPromos_enabled");
+    SWITCH_ITEM2(LOC(@"HIDE_ACCOUNT_SECTION"), LOC(@"RESTART_REQUIRED"), @"disableAccountSection_enabled");
+//  SWITCH_ITEM2(LOC(@"Hide `DontEatMyContent` Section"), LOC(@"RESTART_REQUIRED"), @"disableDontEatMyContentSection_enabled");
+//  SWITCH_ITEM2(LOC(@"Hide `YouTube Return Dislike` Section"), LOC(@"RESTART_REQUIRED"), @"disableReturnYouTubeDislikeSection_enabled");
+//  SWITCH_ITEM2(LOC(@"Hide `YouPiP` Section"), LOC(@"RESTART_REQUIRED"), @"disableYouPiPSection_enabled");
+    SWITCH_ITEM2(LOC(@"HIDE_AUTOPLAY_SECTION"), LOC(@"RESTART_REQUIRED"), @"disableAutoplaySection_enabled");
+    SWITCH_ITEM2(LOC(@"HIDE_TRY_NEW_FEATURES_SECTION"), LOC(@"RESTART_REQUIRED"), @"disableTryNewFeaturesSection_enabled");
+    SWITCH_ITEM2(LOC(@"HIDE_VIDEO_QUALITY_PREFERENCES_SECTION"), LOC(@"RESTART_REQUIRED"), @"disableVideoQualityPreferencesSection_enabled");
+    SWITCH_ITEM2(LOC(@"HIDE_NOTIFICATIONS_SECTION"), LOC(@"RESTART_REQUIRED"), @"disableNotificationsSection_enabled");
+    SWITCH_ITEM2(LOC(@"HIDE_MANAGE_ALL_HISTORY_SECTION"), LOC(@"RESTART_REQUIRED"), @"disableManageAllHistorySection_enabled");
+    SWITCH_ITEM2(LOC(@"HIDE_YOUR_DATA_IN_YOUTUBE_SECTION"), LOC(@"RESTART_REQUIRED"), @"disableYourDataInYouTubeSection_enabled");
+    SWITCH_ITEM2(LOC(@"HIDE_PRIVACY_SECTION"), LOC(@"RESTART_REQUIRED"), @"disablePrivacySection_enabled");
+    SWITCH_ITEM2(LOC(@"HIDE_LIVE_CHAT_SECTION"), LOC(@"RESTART_REQUIRED"), @"disableLiveChatSection_enabled");
+    SWITCH_ITEM2(LOC(@"HIDE_GET_YOUTUBE_PREMIUM_SECTION"), LOC(@"RESTART_REQUIRED"), @"hidePremiumPromos_enabled");
 
     # pragma mark - UI interface options
-    SECTION_HEADER(LOC(@"UI Interface Options"));
+    SECTION_HEADER(LOC(@"UI_INTERFACE_OPTIONS"));
 
-    SWITCH_ITEM2(LOC(@"Hide Home Tab"), LOC(@""), @"hideHomeTab_enabled");
+    SWITCH_ITEM2(LOC(@"HIDE_HOME_TAB"), LOC(@""), @"hideHomeTab_enabled");
     SWITCH_ITEM3(
-        LOC(@"Low Contrast Mode"),
-        LOC(@"This will lower the contrast of texts and buttons, similar to the old YouTube Interface."),
+        LOC(@"LOW_CONTRAST_MODE"),
+        LOC(@"LOW_CONTRAST_MODE_DESC"),
         @"lowContrastMode_enabled",
         ({
             if (enable) {
@@ -425,15 +596,15 @@ extern NSBundle *uYouPlusBundle();
         });
     );
     YTSettingsSectionItem *lowContrastModeButton = [%c(YTSettingsSectionItem)
-        itemWithTitle:@"Low Contrast Mode Selector"
+        itemWithTitle:LOC(@"LOW_CONTRAST_MODE_SELECTOR")
         accessibilityIdentifier:nil
         detailTextBlock:^NSString *() {
             switch (contrastMode()) {
                 case 1:
-                    return LOC(@"Custom Color");
+                    return LOC(@"CUSTOM_COLOR");
                 case 0:
                 default:
-                    return LOC(@"Default");
+                    return LOC(@"DEFAULT");
             }
         }
         selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
@@ -468,13 +639,13 @@ extern NSBundle *uYouPlusBundle();
         }
     ];
     [sectionItems addObject:lowContrastModeButton];
-    SWITCH_ITEM2(LOC(@"Fix LowContrastMode"), LOC(@"This will fix the LowContrastMode functionality by Spoofing to YouTube v17.38.10. App restart is required."), @"fixLowContrastMode_enabled");
-    SWITCH_ITEM2(LOC(@"Disable Modern Buttons"), LOC(@"This will remove the new Modern / Chip Buttons in the YouTube App. but not all of them. App restart is required."), @"disableModernButtons_enabled");
-    SWITCH_ITEM2(LOC(@"Disable Rounded Corners on Hints"), LOC(@"This will make the Hints in the App to not have Rounded Corners. App restart is required."), @"disableRoundedHints_enabled");
-    SWITCH_ITEM2(LOC(@"Disable Modern A/B Flags"), LOC(@"This will turn off any Modern Flag that was enabled by default. App restart is required."), @"disableModernFlags_enabled");
+    SWITCH_ITEM2(LOC(@"FIX_LOWCONTRASTMODE"), LOC(@"FIX_LOWCONTRASTMODE_DESC"), @"fixLowContrastMode_enabled");
+    SWITCH_ITEM2(LOC(@"DISABLE_MODERN_BUTTONS"), LOC(@"DISABLE_MODERN_BUTTONS_DESC"), @"disableModernButtons_enabled");
+    SWITCH_ITEM2(LOC(@"DISABLE_ROUNDED_CORNERS_ON_HINTS"), LOC(@"DISABLE_ROUNDED_CORNERS_ON_HINTS_DESC"), @"disableRoundedHints_enabled");
+    SWITCH_ITEM2(LOC(@"DISABLE_MODERN_FLAGS"), LOC(@"DISABLE_MODERN_FLAGS_DESC"), @"disableModernFlags_enabled");
     SWITCH_ITEM3(
-        LOC(@"Enable Specific UI Related Options (YTNoModernUI)"), 
-        LOC(@"This will enable other options to give it a less-modern feeling. App restart is required."), 
+        LOC(@"YTNOMODERNUI"), 
+        LOC(@"YTNOMODERNUI_DESC"), 
         @"ytNoModernUI_enabled",
         ({
             if (enable) {
@@ -489,594 +660,678 @@ extern NSBundle *uYouPlusBundle();
             return YES;
         });
     );
-    SWITCH_ITEM2(LOC(@"Enable App Version Spoofer"), LOC(@"Enable this to use the Version Spoofer and select your perferred version below. App restart is required."), @"enableVersionSpoofer_enabled");
+    SWITCH_ITEM2(LOC(@"ENABLE_APP_VERSION_SPOOFER"), LOC(@"ENABLE_APP_VERSION_SPOOFER_DESC"), @"enableVersionSpoofer_enabled");
     
     YTSettingsSectionItem *versionSpoofer = [%c(YTSettingsSectionItem)
-        itemWithTitle:@"Version spoofer picker"
+        itemWithTitle:LOC(@"VERSION_SPOOFER_SELECTOR")
         accessibilityIdentifier:nil
         detailTextBlock:^NSString *() {
             switch (appVersionSpoofer()) {
                 case 1:
-                    return @"v19.10.6";
+                    return @"v19.20.2";
                 case 2:
-                    return @"v19.10.5";
+                    return @"v19.19.7";
                 case 3:
-                    return @"v19.09.4";
+                    return @"v19.19.5";
                 case 4:
-                    return @"v19.09.3";
+                    return @"v19.18.2";
                 case 5:
-                    return @"v19.08.2";
+                    return @"v19.17.2";
                 case 6:
-                    return @"v19.07.5";
+                    return @"v19.16.3";
                 case 7:
-                    return @"v19.07.4";
+                    return @"v19.15.1";
                 case 8:
-                    return @"v19.06.2";
+                    return @"v19.14.3";
                 case 9:
-                    return @"v19.05.5";
+                    return @"v19.14.2";
                 case 10:
-                    return @"v19.05.3";
+                    return @"v19.13.1";
                 case 11:
-                    return @"v19.04.3";
+                    return @"v19.12.3";
                 case 12:
-                    return @"v19.03.2";
+                    return @"v19.10.7";
                 case 13:
-                    return @"v19.02.1";
+                    return @"v19.10.6";
                 case 14:
-                    return @"v19.01.1";
+                    return @"v19.10.5";
                 case 15:
-                    return @"v18.49.3";
+                    return @"v19.09.4";
                 case 16:
-                    return @"v18.48.3";
+                    return @"v19.09.3";
                 case 17:
-                    return @"v18.46.3";
+                    return @"v19.08.2";
                 case 18:
-                    return @"v18.45.2";
+                    return @"v19.07.5";
                 case 19:
-                    return @"v18.44.3";
+                    return @"v19.07.4";
                 case 20:
-                    return @"v18.43.4";
+                    return @"v19.06.2";
                 case 21:
-                    return @"v18.41.5";
+                    return @"v19.05.5";
                 case 22:
-                    return @"v18.41.3";
+                    return @"v19.05.3";
                 case 23:
-                    return @"v18.41.2";
+                    return @"v19.04.3";
                 case 24:
-                    return @"v18.40.1";
+                    return @"v19.03.2";
                 case 25:
-                    return @"v18.39.1";
+                    return @"v19.02.1";
                 case 26:
-                    return @"v18.38.2";
+                    return @"v19.01.1";
                 case 27:
-                    return @"v18.35.4";
+                    return @"v18.49.3";
                 case 28:
-                    return @"v18.34.5";
+                    return @"v18.48.3";
                 case 29:
-                    return @"v18.33.3";
+                    return @"v18.46.3";
                 case 30:
-                    return @"v18.33.2";
+                    return @"v18.45.2";
                 case 31:
-                    return @"v18.32.2";
+                    return @"v18.44.3";
                 case 32:
-                    return @"v18.31.3";
+                    return @"v18.43.4";
                 case 33:
-                    return @"v18.30.7";
+                    return @"v18.41.5";
                 case 34:
-                    return @"v18.30.6";
+                    return @"v18.41.3";
                 case 35:
-                    return @"v18.29.1";
+                    return @"v18.41.2";
                 case 36:
-                    return @"v18.28.3";
+                    return @"v18.40.1";
                 case 37:
-                    return @"v18.27.3";
+                    return @"v18.39.1";
                 case 38:
-                    return @"v18.25.1";
+                    return @"v18.38.2";
                 case 39:
-                    return @"v18.23.3";
+                    return @"v18.35.4";
                 case 40:
-                    return @"v18.22.9";
+                    return @"v18.34.5";
                 case 41:
-                    return @"v18.21.3";
+                    return @"v18.33.3";
                 case 42:
-                    return @"v18.20.3";
+                    return @"v18.33.2";
                 case 43:
-                    return @"v18.19.1";
+                    return @"v18.32.2";
                 case 44:
-                    return @"v18.18.2";
+                    return @"v18.31.3";
                 case 45:
-                    return @"v18.17.2";
+                    return @"v18.30.7";
                 case 46:
-                    return @"v18.16.2";
+                    return @"v18.30.6";
                 case 47:
-                    return @"v18.15.1";
+                    return @"v18.29.1";
                 case 48:
-                    return @"v18.14.1";
+                    return @"v18.28.3";
                 case 49:
-                    return @"v18.13.4";
+                    return @"v18.27.3";
                 case 50:
-                    return @"v18.12.2";
+                    return @"v18.25.1";
                 case 51:
-                    return @"v18.11.2";
+                    return @"v18.23.3";
                 case 52:
-                    return @"v18.10.1";
+                    return @"v18.22.9";
                 case 53:
-                    return @"v18.09.4";
+                    return @"v18.21.3";
                 case 54:
-                    return @"v18.08.1";
+                    return @"v18.20.3";
                 case 55:
-                    return @"v18.07.5";
+                    return @"v18.19.1";
                 case 56:
-                    return @"v18.05.2";
+                    return @"v18.18.2";
                 case 57:
-                    return @"v18.04.3";
+                    return @"v18.17.2";
                 case 58:
-                    return @"v18.03.3";
+                    return @"v18.16.2";
                 case 59:
-                    return @"v18.02.03";
+                    return @"v18.15.1";
                 case 60:
-                    return @"v18.01.6";
+                    return @"v18.14.1";
                 case 61:
-                    return @"v18.01.4";
+                    return @"v18.13.4";
                 case 62:
-                    return @"v18.01.2";
+                    return @"v18.12.2";
                 case 63:
-                    return @"v17.49.6";
+                    return @"v18.11.2";
                 case 64:
-                    return @"v17.49.4";
+                    return @"v18.10.1";
                 case 65:
-                    return @"v17.46.4";
+                    return @"v18.09.4";
                 case 66:
-                    return @"v17.45.1";
+                    return @"v18.08.1";
                 case 67:
-                    return @"v17.44.4";
+                    return @"v18.07.5";
                 case 68:
-                    return @"v17.43.1";
+                    return @"v18.05.2";
                 case 69:
-                    return @"v17.42.7";
+                    return @"v18.04.3";
                 case 70:
-                    return @"v17.42.6";
+                    return @"v18.03.3";
                 case 71:
-                    return @"v17.41.2";
+                    return @"v18.02.03";
                 case 72:
-                    return @"v17.40.5";
+                    return @"v18.01.6";
                 case 73:
-                    return @"v17.39.4";
+                    return @"v18.01.4";
                 case 74:
-                    return @"v17.38.10";
+                    return @"v18.01.2";
                 case 75:
-                    return @"v17.38.9";
+                    return @"v17.49.6";
                 case 76:
-                    return @"v17.37.2";
+                    return @"v17.49.4";
                 case 77:
-                    return @"v17.36.4";
+                    return @"v17.46.4";
                 case 78:
-                    return @"v17.36.3";
+                    return @"v17.45.1";
                 case 79:
-                    return @"v17.35.3";
+                    return @"v17.44.4";
                 case 80:
-                    return @"v17.34.3";
+                    return @"v17.43.1";
                 case 81:
+                    return @"v17.42.7";
+                case 82:
+                    return @"v17.42.6";
+                case 83:
+                    return @"v17.41.2";
+                case 84:
+                    return @"v17.40.5";
+                case 85:
+                    return @"v17.39.4";
+                case 86:
+                    return @"v17.38.10";
+                case 87:
+                    return @"v17.38.9";
+                case 88:
+                    return @"v17.37.2";
+                case 89:
+                    return @"v17.36.4";
+                case 90:
+                    return @"v17.36.3";
+                case 91:
+                    return @"v17.35.3";
+                case 92:
+                    return @"v17.34.3";
+                case 93:
                     return @"v17.33.2";
                 case 0:
                 default:
-                    return @"v19.10.7";
+                    return @"v19.21.2";
             }
         }
         selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
             NSArray <YTSettingsSectionItem *> *rows = @[
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.10.7" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.21.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.10.6" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.20.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:1 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.10.5" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.19.7" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:2 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.09.4" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.19.5" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:3 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.09.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.18.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:4 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.08.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.17.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:5 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.07.5" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.16.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:6 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.07.4" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.15.1" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:7 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.06.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.14.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:8 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.05.5" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.14.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:9 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.05.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.13.1" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:10 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.04.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.12.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:11 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.03.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.10.7" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:12 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.02.1" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.10.6" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:13 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.01.1" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.10.5" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:14 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.49.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.09.4" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:15 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.48.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.09.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:16 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.46.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.08.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:17 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.45.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.07.5" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:18 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.44.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.07.4" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:19 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.43.4" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.06.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:20 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.41.5" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.05.5" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:21 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.41.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.05.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:22 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.41.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.04.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:23 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.40.1" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.03.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:24 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.39.1" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.02.1" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:25 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.38.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v19.01.1" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:26 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.35.4" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.49.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:27 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.34.5" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.48.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:28 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.33.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.46.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:29 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.33.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.45.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:30 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.32.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.44.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:31 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.31.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.43.4" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:32 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.30.7" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.41.5" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:33 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.30.6" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.41.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:34 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.29.1" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.41.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:35 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.28.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.40.1" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:36 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.27.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.39.1" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:37 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.25.1" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.38.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:38 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.23.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.35.4" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:39 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.22.9" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.34.5" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:40 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.21.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.33.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:41 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.20.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.33.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:42 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.19.1" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.32.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:43 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.18.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.31.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:44 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.17.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.30.7" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:45 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.16.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.30.6" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:46 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
-                    return YES;      
+                    return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.15.1" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.29.1" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:47 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.14.1" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.28.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:48 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.13.4" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.27.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:49 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.12.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.25.1" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:50 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.11.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.23.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:51 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.10.1" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.22.9" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:52 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.09.4" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.21.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:53 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
-               }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.08.1" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                }],
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.20.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:54 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.07.5" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.19.1" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:55 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.05.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.18.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:56 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.04.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.17.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:57 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.03.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.16.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:58 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
-                    return YES;
+                    return YES;      
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.02.03" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.15.1" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:59 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.01.6" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.14.1" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:60 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.01.4" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.13.4" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:61 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
-               }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.01.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                }],
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.12.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:62 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.49.6" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.11.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:63 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.49.4" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.10.1" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:64 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.46.4" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.09.4" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:65 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
-                }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.45.1" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+               }],
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.08.1" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:66 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.44.4" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.07.5" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:67 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.43.1" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.05.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:68 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.42.7" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.04.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:69 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.42.6" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.03.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:70 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.41.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.02.03" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:71 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
-               }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.40.5" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                }],
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.01.6" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:72 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.39.4" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.01.4" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:73 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
-                }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.38.10" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+               }],
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v18.01.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:74 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.38.9" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.49.6" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:75 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.37.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.49.4" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:76 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.36.4" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.46.4" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:77 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.36.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.45.1" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:78 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.35.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.44.4" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:79 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.34.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.43.1" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:80 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }],
-                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.33.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.42.7" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
                     [[NSUserDefaults standardUserDefaults] setInteger:81 forKey:@"versionSpoofer"];
+                    [settingsViewController reloadData];
+                    return YES;
+                }],
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.42.6" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                    [[NSUserDefaults standardUserDefaults] setInteger:82 forKey:@"versionSpoofer"];
+                    [settingsViewController reloadData];
+                    return YES;
+                }],
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.41.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                    [[NSUserDefaults standardUserDefaults] setInteger:83 forKey:@"versionSpoofer"];
+                    [settingsViewController reloadData];
+                    return YES;
+               }],
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.40.5" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                    [[NSUserDefaults standardUserDefaults] setInteger:84 forKey:@"versionSpoofer"];
+                    [settingsViewController reloadData];
+                    return YES;
+                }],
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.39.4" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                    [[NSUserDefaults standardUserDefaults] setInteger:85 forKey:@"versionSpoofer"];
+                    [settingsViewController reloadData];
+                    return YES;
+                }],
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.38.10" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                    [[NSUserDefaults standardUserDefaults] setInteger:86 forKey:@"versionSpoofer"];
+                    [settingsViewController reloadData];
+                    return YES;
+                }],
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.38.9" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                    [[NSUserDefaults standardUserDefaults] setInteger:87 forKey:@"versionSpoofer"];
+                    [settingsViewController reloadData];
+                    return YES;
+                }],
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.37.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                    [[NSUserDefaults standardUserDefaults] setInteger:88 forKey:@"versionSpoofer"];
+                    [settingsViewController reloadData];
+                    return YES;
+                }],
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.36.4" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                    [[NSUserDefaults standardUserDefaults] setInteger:89 forKey:@"versionSpoofer"];
+                    [settingsViewController reloadData];
+                    return YES;
+                }],
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.36.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                    [[NSUserDefaults standardUserDefaults] setInteger:90 forKey:@"versionSpoofer"];
+                    [settingsViewController reloadData];
+                    return YES;
+                }],
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.35.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                    [[NSUserDefaults standardUserDefaults] setInteger:91 forKey:@"versionSpoofer"];
+                    [settingsViewController reloadData];
+                    return YES;
+                }],
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.34.3" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                    [[NSUserDefaults standardUserDefaults] setInteger:92 forKey:@"versionSpoofer"];
+                    [settingsViewController reloadData];
+                    return YES;
+                }],
+                [YTSettingsSectionItemClass checkmarkItemWithTitle:@"v17.33.2" titleDescription:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+                    [[NSUserDefaults standardUserDefaults] setInteger:93 forKey:@"versionSpoofer"];
                     [settingsViewController reloadData];
                     return YES;
                 }]
             ];
-            YTSettingsPickerViewController *picker = [[%c(YTSettingsPickerViewController) alloc] initWithNavTitle:LOC(@"Version Spoofer Picker") pickerSectionTitle:nil rows:rows selectedItemIndex:appVersionSpoofer() parentResponder:[self parentResponder]];
+            YTSettingsPickerViewController *picker = [[%c(YTSettingsPickerViewController) alloc] initWithNavTitle:LOC(@"VERSION_SPOOFER_TITLE") pickerSectionTitle:nil rows:rows selectedItemIndex:appVersionSpoofer() parentResponder:[self parentResponder]];
             [settingsViewController pushViewController:picker];
             return YES;
         }
@@ -1086,10 +1341,11 @@ extern NSBundle *uYouPlusBundle();
     # pragma mark - Miscellaneous
     SECTION_HEADER(LOC(@"MISCELLANEOUS"));
 
-    SWITCH_ITEM2(LOC(@"Adblock Workaround"), LOC(@"Uses stronger adblocking code"), @"uYouAdBlockingWorkaround_enabled");
+    SWITCH_ITEM2(LOC(@"ADBLOCK_WORKAROUND_LITE"), LOC(@"ADBLOCK_WORKAROUND_LITE_DESC"), @"uYouAdBlockingWorkaroundLite_enabled");
+    SWITCH_ITEM2(LOC(@"ADBLOCK_WORKAROUND"), LOC(@"ADBLOCK_WORKAROUND_DESC"), @"uYouAdBlockingWorkaround_enabled");
     SWITCH_ITEM3(
-        LOC(@"Fake Premium"),
-        LOC(@"Uses Premium logo and creates fake buttons in the You tab"),
+        LOC(@"FAKE_PREMIUM"),
+        LOC(@"FAKE_PREMIUM_DESC"),
         @"youTabFakePremium_enabled",
         ({
             // Get the current version (including spoofed versions)
@@ -1103,6 +1359,8 @@ extern NSBundle *uYouPlusBundle();
                 [alert addAction:okAction];
                 [settingsViewController presentViewController:alert animated:YES completion:nil];
             }
+            // Enable the "Disable Animated YouTube Logo" setting
+            [[NSUserDefaults standardUserDefaults] setBool:enable forKey:@"disableAnimatedYouTubeLogo_enabled"];
             // Refresh data and show the relaunch popup
             [[NSUserDefaults standardUserDefaults] setBool:enable forKey:@"youTabFakePremium_enabled"];
             [settingsViewController reloadData];
@@ -1110,22 +1368,24 @@ extern NSBundle *uYouPlusBundle();
             return YES;
         });
     );
-//  SWITCH_ITEM(LOC(@"Center YouTube Logo"), LOC(@"Toggle this to move the official YouTube Logo to the Center. App restart is required."), @"centerYouTubeLogo_enabled");
-    SWITCH_ITEM(LOC(@"Hide YouTube Logo"), LOC(@"Toggle this to hide the YouTube Logo in the YouTube App."), @"hideYouTubeLogo_enabled");
+    SWITCH_ITEM(LOC(@"DISABLE_ANIMATED_YOUTUBE_LOGO"), nil, @"disableAnimatedYouTubeLogo_enabled");
+//  SWITCH_ITEM(LOC(@"CENTER_YOUTUBE_LOGO"), LOC(@"CENTER_YOUTUBE_LOGO_DESC"), @"centerYouTubeLogo_enabled");
+    SWITCH_ITEM(LOC(@"HIDE_YOUTUBE_LOGO"), LOC(@"HIDE_YOUTUBE_LOGO_DESC"), @"hideYouTubeLogo_enabled");
     SWITCH_ITEM2(LOC(@"ENABLE_YT_STARTUP_ANIMATION"), LOC(@"ENABLE_YT_STARTUP_ANIMATION_DESC"), @"ytStartupAnimation_enabled");
     SWITCH_ITEM(LOC(@"DISABLE_HINTS"), LOC(@"DISABLE_HINTS_DESC"), @"disableHints_enabled");
-    SWITCH_ITEM(LOC(@"Stick Navigation Bar"), LOC(@"Enable to make the Navigation Bar stay on the App when scrolling."), @"stickNavigationBar_enabled");
+    SWITCH_ITEM(LOC(@"STICK_NAVIGATION_BAR"), LOC(@"STICK_NAVIGATION_BAR_DESC"), @"stickNavigationBar_enabled");
     SWITCH_ITEM2(LOC(@"HIDE_ISPONSORBLOCK"), nil, @"hideSponsorBlockButton_enabled");
-    SWITCH_ITEM2(LOC(@"Hides uYouPlus button"), nil, @"hideuYouPlusButton_enabled");
     SWITCH_ITEM(LOC(@"HIDE_CHIP_BAR"), LOC(@"HIDE_CHIP_BAR_DESC"), @"hideChipBar_enabled");
     SWITCH_ITEM(LOC(@"HIDE_PLAY_NEXT_IN_QUEUE"), LOC(@"HIDE_PLAY_NEXT_IN_QUEUE_DESC"), @"hidePlayNextInQueue_enabled");
-    SWITCH_ITEM2(LOC(@"Hide Community Posts"), LOC(@"Hides the Community Posts. App restart is required."), @"hideCommunityPosts_enabled");
-    SWITCH_ITEM2(LOC(@"Hide Header Links under channel profile"), LOC(@"Hides the Header Links under any channel profile."), @"hideChannelHeaderLinks_enabled");
-    SWITCH_ITEM2(LOC(@"Hide all videos under player"), LOC(@"Hides all videos below the player."), @"noRelatedWatchNexts_enabled");
+    SWITCH_ITEM2(LOC(@"HIDE_COMMUNITY_POSTS"), LOC(@"HIDE_COMMUNITY_POSTS_DESC"), @"hideCommunityPosts_enabled");
+    SWITCH_ITEM2(LOC(@"HIDE_HEADER_LINKS_UNDER_PROFILE"), LOC(@"HIDE_HEADER_LINKS_UNDER_PROFILE_DESC"), @"hideChannelHeaderLinks_enabled");
     SWITCH_ITEM2(LOC(@"IPHONE_LAYOUT"), LOC(@"IPHONE_LAYOUT_DESC"), @"iPhoneLayout_enabled");
     SWITCH_ITEM2(LOC(@"NEW_MINIPLAYER_STYLE"), LOC(@"NEW_MINIPLAYER_STYLE_DESC"), @"bigYTMiniPlayer_enabled");
     SWITCH_ITEM2(LOC(@"YT_RE_EXPLORE"), LOC(@"YT_RE_EXPLORE_DESC"), @"reExplore_enabled");
-    SWITCH_ITEM2(LOC(@"Hide Indicators"), LOC(@"Hides all Indicators that were in the App."), @"hideSubscriptionsNotificationBadge_enabled");
+    SWITCH_ITEM2(LOC(@"AUTO_HIDE_HOME_INDICATOR"), LOC(@"AUTO_HIDE_HOME_INDICATOR_DESC"), @"autoHideHomeBar_enabled");
+    SWITCH_ITEM2(LOC(@"HIDE_INDICATORS"), LOC(@"HIDE_INDICATORS_DESC"), @"hideSubscriptionsNotificationBadge_enabled");
+    SWITCH_ITEM2(LOC(@"FIX_CASTING"), LOC(@"FIX_CASTING_DESC"), @"fixCasting_enabled");
+    SWITCH_ITEM2(LOC(@"NEW_SETTINGS_UI"), LOC(@"NEW_SETTINGS_UI_DESC"), @"newSettingsUI_enabled");
     SWITCH_ITEM(LOC(@"ENABLE_FLEX"), LOC(@"ENABLE_FLEX_DESC"), @"flex_enabled");
 
     if ([settingsViewController respondsToSelector:@selector(setSectionItems:forCategory:title:icon:titleDescription:headerHidden:)])
