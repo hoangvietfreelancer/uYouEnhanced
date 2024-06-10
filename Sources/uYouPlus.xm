@@ -14,19 +14,6 @@ NSBundle *uYouPlusBundle() {
     return bundle;
 }
 NSBundle *tweakBundle = uYouPlusBundle();
-
-// uYouPlusSettings.xm
-static int contrastMode() {
-    NSString *appVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
-    NSComparisonResult result1 = [appVersion compare:@"17.33.2" options:NSNumericSearch];
-    NSComparisonResult result2 = [appVersion compare:@"17.38.10" options:NSNumericSearch];
-
-    if (result1 != NSOrderedAscending && result2 != NSOrderedDescending) {
-        return [[NSUserDefaults standardUserDefaults] integerForKey:@"lcm"];
-    } else {
-        return 0;
-    }
-}
 //
 
 # pragma mark - Other hooks
@@ -51,19 +38,7 @@ static int contrastMode() {
 }
 %end
 
-// Fixes uYou crash when trying to play video (#1422)
-@interface YTVarispeedSwitchController : NSObject
-@end
-
-@interface YTPlayerOverlayManager : NSObject
-@property (nonatomic, assign) float currentPlaybackRate;
-@property (nonatomic, strong, readonly) YTVarispeedSwitchController *varispeedController;
-
-- (void)varispeedSwitchController:(YTVarispeedSwitchController *)varispeed didSelectRate:(float)rate;
-- (void)setCurrentPlaybackRate:(float)rate;
-- (void)setPlaybackRate:(float)rate;
-@end
-
+// Fixes uYou crash when trying to play video (qnblackcat/#1422) - @Dayanch96
 %hook YTPlayerOverlayManager
 %property (nonatomic, assign) float currentPlaybackRate;
 
@@ -162,6 +137,7 @@ BOOL isAdString(NSString *description) {
         || [description containsString:@"text_search_ad"]
         || [description containsString:@"expandable_list"]
         || [description containsString:@"expandable_metadata"]
+        || [description containsString:@"video_display_full_layout"]
         || [description containsString:@"video_display_full_buttoned_layout"])
         return YES;
     return NO;
@@ -571,6 +547,18 @@ NSData *cellDividerData;
 %end
 
 // Fix LowContrastMode - @arichornlover
+static int contrastMode() {
+    NSString *appVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+    NSComparisonResult result1 = [appVersion compare:@"17.33.2" options:NSNumericSearch];
+    NSComparisonResult result2 = [appVersion compare:@"17.38.10" options:NSNumericSearch];
+
+    if (result1 != NSOrderedAscending && result2 != NSOrderedDescending) {
+        return [[NSUserDefaults standardUserDefaults] integerForKey:@"lcm"];
+    } else {
+        return 0;
+    }
+}
+
 %group gFixLowContrastMode
 %hook NSUserDefaults
 - (NSInteger)integerForKey:(NSString *)defaultName {

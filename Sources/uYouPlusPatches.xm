@@ -154,10 +154,8 @@ static inline NSString* extractIdWithFormat(GPBUnknownFieldSet *fields, NSIntege
     if (!shareUrl)
         return %orig;
 
-    if ([NSUserDefaults.standardUserDefaults boolForKey:@"enableSystemShareSheet"]) {
-        UIActivityViewController *activityViewController = [[UIActivityViewController alloc]initWithActivityItems:@[shareUrl] applicationActivities:nil];
-        [[%c(YTUIUtils) topViewControllerForPresenting] presentViewController:activityViewController animated:YES completion:^{}];
-    }
+    UIActivityViewController *activityViewController = [[UIActivityViewController alloc]initWithActivityItems:@[shareUrl] applicationActivities:nil];
+    [[%c(YTUIUtils) topViewControllerForPresenting] presentViewController:activityViewController animated:YES completion:^{}];
 }
 %end
 

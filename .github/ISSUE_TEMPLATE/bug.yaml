@@ -26,7 +26,7 @@ body:
 - type: input
   attributes:
     label: iOS/iPadOS version
-    placeholder: iOS 17.4
+    placeholder: iOS 17.5.1
   validations:
     required: true
 
@@ -47,7 +47,7 @@ body:
 - type: input
   attributes:
     label: Tweak version
-    placeholder: uYouEnhanced - v19.xx.x-3.0.3
+    placeholder: uYouEnhanced - v19.xx.x-3.0.4
     description: "**latest or newest is NOT a version number!**"
   validations:
     required: true
@@ -108,6 +108,13 @@ body:
       - ✅ Yes, I can reproduce this issue in the official YouTube from AppStore 
   validations:
     required: true
+
+- type: checkboxes
+  attributes:
+    label: Select the configuration used for building uYouEnhanced ipa.
+    options:
+      - label: buildapp.yml
+      - label: build.sh
 
 - type: textarea
   attributes:
